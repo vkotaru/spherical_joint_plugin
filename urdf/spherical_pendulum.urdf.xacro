@@ -55,12 +55,12 @@
         <visual>
             <origin xyz="0 0 ${cable_length/2}" rpy="0 0 0"/>
             <geometry>
-                <cylinder length="${cable_length}" radius="${2*cable_radius}"/>
+                <cylinder length="${cable_length}" radius="${cable_radius}"/>
             </geometry>
         </visual>
         <inertial>
             <origin xyz="0 0 ${cable_length/2}" rpy="0 0 0"/>
-            <mass value="0.5"/>
+            <mass value="50"/>
             <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0004"/>
         </inertial>
     </link>
@@ -75,15 +75,6 @@
         <child link="cable"/>
     </joint>
 
-    <!--    <gazebo>-->
-    <!--        <model name="universal_joint">-->
-    <!--            <joint name="joint" type="universal">-->
-    <!--                <parent>fixed_base</parent>-->
-    <!--                <child>cable</child>-->
-    <!--            </joint>-->
-    <!--        </model>-->
-    <!--    </gazebo>-->
-
     <!-- Macro to add a qrotor_sil plugin. -->
     <xacro:macro name="spherical_joint_plugin" params="namespace parent_link child_link">
         <gazebo>
@@ -95,69 +86,5 @@
         </gazebo>
     </xacro:macro>
     <xacro:spherical_joint_plugin namespace="spherical_pendulum" parent_link="fixed_base" child_link="cable"/>
-
-<!--    &lt;!&ndash; MACRO: dummy link to create 3D rotation (in Euler Angles) &ndash;&gt;-->
-<!--    <xacro:macro name="dummy_link" params="name">-->
-<!--        <link name="${name}">-->
-<!--            <gravity>0</gravity>-->
-<!--            <inertial>-->
-<!--                <origin rpy="0 0 0" xyz="0 0 0"/>-->
-<!--                <mass value="0.00001"/>-->
-<!--                <inertia ixx="0.000000001" ixy="0" ixz="0" iyy="0.000000001" iyz="0" izz="0.000000001"/>-->
-<!--            </inertial>-->
-<!--            <visual>-->
-<!--                <geometry>-->
-<!--                    <sphere radius="0.001"/>-->
-<!--                </geometry>-->
-<!--            </visual>-->
-<!--        </link>-->
-<!--        <gazebo reference="${name}">-->
-<!--            <material>Gazebo/Black</material>-->
-<!--        </gazebo>-->
-<!--    </xacro:macro>-->
-
-<!--    &lt;!&ndash; MACRO: create a rotational joint ( TODO: debug this joint) &ndash;&gt;-->
-<!--    <xacro:macro name="rotational_joint" params="parent child jx jy jz r p y">-->
-<!--        <xacro:dummy_link name="${parent}_${child}_dummylink1"/>-->
-<!--        <xacro:dummy_link name="${parent}_${child}_dummylink2"/>-->
-<!--        <joint name="${parent}_${child}_roll" type="continuous">-->
-<!--            <parent link="${parent}"/>-->
-<!--            <child link="${parent}_${child}_dummylink1"/>-->
-<!--            <axis xyz="1 0 0"/>-->
-<!--            &lt;!&ndash; <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/> &ndash;&gt;-->
-<!--            <dynamics damping="0.0" friction="0.0"/>-->
-<!--            &lt;!&ndash; <limit effort="30" velocity="1.0" lower="-2.2" upper="0.7" />-->
-<!--            <safety_controller k_velocity="10" k_position="15" soft_lower_limit="-2.0" soft_upper_limit="0.5" /> &ndash;&gt;-->
-<!--            &lt;!&ndash; <joint_properties damping="0.0" friction="0.0" /> &ndash;&gt;-->
-<!--            <origin xyz="${jx} ${jy} ${jz}" rpy="${r} 0 0"/>-->
-<!--        </joint>-->
-<!--        <joint name="${parent}_${child}_pitch" type="continuous">-->
-<!--            <parent link="${parent}_${child}_dummylink1"/>-->
-<!--            <child link="${parent}_${child}_dummylink2"/>-->
-<!--            <axis xyz="0 1 0"/>-->
-<!--            &lt;!&ndash; <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/> &ndash;&gt;-->
-<!--            <dynamics damping="0.0" friction="0.0"/>-->
-<!--            &lt;!&ndash; <dynamics damping="0.0" friction="0.0"/>-->
-<!--            <limit effort="30" velocity="1.0" lower="-2.2" upper="0.7" />-->
-<!--            <safety_controller k_velocity="10" k_position="15" soft_lower_limit="-2.0" soft_upper_limit="0.5" /> &ndash;&gt;-->
-<!--            &lt;!&ndash; <joint_properties damping="0.0" friction="0.0" /> &ndash;&gt;-->
-<!--            <origin xyz="0 0 0" rpy="0 ${p} 0"/>-->
-<!--        </joint>-->
-<!--        <joint name="${parent}_${child}_yaw" type="continuous">-->
-<!--            <parent link="${parent}_${child}_dummylink2"/>-->
-<!--            <child link="${child}"/>-->
-<!--            <axis xyz="0 0 1"/>-->
-<!--            &lt;!&ndash; <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/> &ndash;&gt;-->
-<!--            <dynamics damping="0.0" friction="0.0"/>-->
-<!--            &lt;!&ndash; <dynamics damping="0.0" friction="0.0"/> &ndash;&gt;-->
-<!--            &lt;!&ndash; <limit effort="30" velocity="1.0" lower="-2.2" upper="0.7" /> &ndash;&gt;-->
-<!--            &lt;!&ndash; <safety_controller k_velocity="10" k_position="15" soft_lower_limit="-2.0" soft_upper_limit="0.5" /> &ndash;&gt;-->
-<!--            &lt;!&ndash; <joint_properties damping="0.0" friction="0.0" /> &ndash;&gt;-->
-<!--            <origin xyz="0 0 0" rpy="0 0 ${y}"/>-->
-<!--        </joint>-->
-<!--    </xacro:macro>-->
-<!--    <xacro:rotational_joint parent="fixed_base" child="cable" jx="0" jy="0" jz="${-base_height/2}" r="${PI/2}"-->
-<!--                            p="${PI/4}" y="${PI/4}"/>-->
-
-
+    
 </robot>
