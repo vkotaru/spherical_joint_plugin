@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<robot name="spherical_pendulum"
+       xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Constants for robot dimensions -->
+    <xacro:property name="PI" value="3.1415926535897931"/>
+    <xacro:property name="mass" value="10"/>
+    <xacro:property name="base_width" value="0.5"/>
+    <xacro:property name="base_length" value="0.5"/>
+    <xacro:property name="base_height" value="0.2"/>
+    <xacro:property name="cable_length" value="1"/>
+    <xacro:property name="cable_radius" value="0.002"/>
+    <xacro:property name="cable_mass" value="0.1"/>
+
+    <!-- Macro to add a spherical_joint_plugin. -->
+    <xacro:macro name="spherical_joint_plugin" params="namespace parent_link child_link">
+        <gazebo>
+            <plugin filename="libspherical_joint_plugin.so" name="spherical_joint_plugin">
+                <parent_link>${parent_link}</parent_link>
+                <child_link>${child_link}</child_link>
+                <namespace>${namespace}</namespace>
+            </plugin>
+        </gazebo>
+    </xacro:macro>
+
+    <!-- Used for fixing robot to Gazebo 'base_link' -->
+    <link name="world"/>
+
+    <joint name="fixed" type="floating">
+        <parent link="world"/>
+        <child link="fixed_base"/>
+    </joint>
+
+    <!-- FixedBase Link -->
+    <link name="fixed_base">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${base_length} ${base_width} ${base_height}"/>
+            </geometry>
+        </collision>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${base_length} ${base_width} ${base_height}"/>
+            </geometry>
+            <material name="orange"/>
+        </visual>
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="${mass}"/>
+            <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+        </inertial>
+    </link>
+
+    <!-- Cable Link -->
+    <link name="cable">
+        <collision>
+            <origin xyz="0 0 ${cable_length/2}" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="${cable_length}" radius="${cable_radius}"/>
+            </geometry>
+            <surface>
+                <bounce restitution_coefficient="0"/>
+            </surface>
+        </collision>
+        <visual>
+            <origin xyz="0 0 ${cable_length/2}" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="${cable_length}" radius="${cable_radius}"/>
+            </geometry>
+        </visual>
+        <inertial>
+            <origin xyz="0 0 ${cable_length/2}" rpy="0 0 0"/>
+            <mass value="${cable_mass}"/>
+            <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0004"/>
+        </inertial>
+    </link>
+    <gazebo reference="cable">
+        <material>Gazebo/Black</material>
+        <self_collide>0</self_collide>
+    </gazebo>
+
+    <!-- Payload Link -->
+    <link name="payload">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${base_length} ${base_width} ${base_height}"/>
+            </geometry>
+        </collision>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${base_length} ${base_width} ${base_height}"/>
+            </geometry>
+            <material name="orange"/>
+        </visual>
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="${mass}"/>
+            <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+        </inertial>
+    </link>
+
+
+    <joint name="dummy_fixed_base_cable_joint" type="floating">
+        <origin xyz="0 0 ${-base_height/2}" rpy="${PI/2} ${PI/4} ${PI/4}"/>
+        <parent link="fixed_base"/>
+        <child link="cable"/>
+    </joint>
+    <joint name="dummy_cable_payload_joint" type="floating">
+        <origin xyz="0 0 ${cable_length}" rpy="0 0 0"/>
+        <parent link="cable"/>
+        <child link="payload"/>
+    </joint>
+
+    <xacro:spherical_joint_plugin namespace="joint1" parent_link="fixed_base" child_link="cable"/>
+    <xacro:spherical_joint_plugin namespace="joint2" parent_link="cable" child_link="payload"/>
+
+</robot>

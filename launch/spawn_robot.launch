@@ -8,7 +8,8 @@
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
   <arg name="z" default="2"/>
-  <arg name="xacro_file" default="$(find spherical_joint_plugin)/urdf/spherical_pendulum.urdf.xacro"/>
+  <arg name="model" default="spherical_pendulum.urdf.xacro"/>
+  <arg name="xacro_file" default="$(find spherical_joint_plugin)/urdf/$(arg model)"/>
 
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
