@@ -43,7 +43,8 @@ void SphericalJointPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) 
   child_reset_pose_ = child_link_->WorldPose();
 
   // Create a universal joint
-  joint_ = model_->CreateJoint("universal_joint", "universal", parent_link_, child_link_ );
+  std::string joint_name = parent_link_name_+"_"+child_link_name_+"_universal_joint";
+  joint_ = model_->CreateJoint(joint_name, "universal", parent_link_, child_link_ );
   joint_->SetAnchor(0, child_link_->WorldPose().Pos());
   joint_->SetAnchor(1, child_link_->WorldPose().Pos());
 
